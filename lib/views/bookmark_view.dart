@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:recipe_app/controller/bookmark_manager.dart';
@@ -33,7 +35,7 @@ class BookmarkView extends StatelessWidget {
                             ConnectionState.done &&
                         !snapshot.hasData) {
                       return Center(
-                        child: Text("No recipeis"),
+                        child: Text("No recipeis added to bookmarks"),
                       );
                     } else if (snapshot.hasData) {
                       return ListView.separated(
