@@ -64,7 +64,6 @@ class BookmarkManager with ChangeNotifier {
       await getAllBookMarks();
       toast(msg: "Removed from bookmarks");
       await bookmarkService.close();
-
       return deleteCount;
     } catch (error) {
       await bookmarkService.close();
