@@ -185,8 +185,8 @@ class DetialViewExample extends StatelessWidget {
                       ),
                     ),
                     TextButton(
-                      onPressed: () {
-                        bookmarkManager.addToBookMarks(recipeModel);
+                      onPressed: () async {
+                        await bookmarkManager.addToBookMarks(recipeModel);
                       },
                       child: const Padding(
                         padding: EdgeInsets.all(12.0),
