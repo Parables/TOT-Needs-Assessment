@@ -5,12 +5,32 @@ import 'package:recipe_app/controller/bookmark_manager.dart';
 import 'package:recipe_app/model/recipe_model.dart';
 import 'package:recipe_app/views/video_player_view.dart';
 
-class DetialViewExample extends StatelessWidget {
+class DetialViewExample extends StatefulWidget {
   DetialViewExample({Key? key, required this.recipeModel}) : super(key: key);
 
   final RecipeModel recipeModel;
 
-  BookmarkManager bookmarkManager = BookmarkManager();
+  @override
+  _DetialViewExampleState createState() => _DetialViewExampleState();
+}
+
+class _DetialViewExampleState extends State<DetialViewExample> {
+  final BookmarkManager bookmarkManager = BookmarkManager();
+  bool _isBookmarked = false;
+
+  Future<void> getStatus() async {
+    bool res = await bookmarkManager.isBookmarked(widget.recipeModel);
+    print('is checked: $res');
+    setState(() {
+      _isBookmarked = res;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getStatus();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +41,7 @@ class DetialViewExample extends StatelessWidget {
         child: Stack(
           children: [
             Image.network(
-              recipeModel.image,
+              widget.recipeModel.image,
               width: MediaQuery.of(context).size.width,
               height: MediaQuery.of(context).size.height,
               fit: BoxFit.cover,
@@ -48,8 +68,8 @@ class DetialViewExample extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) =>
-                              VideoPlayerView(videoUrl: recipeModel.video),
+                          builder: (context) => VideoPlayerView(
+                              videoUrl: widget.recipeModel.video),
                         ),
                       );
                     },
@@ -88,7 +108,7 @@ class DetialViewExample extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          recipeModel.title,
+                          widget.recipeModel.title,
                           style: Theme.of(context)
                               .textTheme
                               .headline5!
@@ -97,7 +117,7 @@ class DetialViewExample extends StatelessWidget {
                         Row(
                           children: [
                             Text(
-                              recipeModel.category,
+                              widget.recipeModel.category,
                               style: Theme.of(context).textTheme.bodyText1,
                             ),
                             const Spacer(),
@@ -109,7 +129,7 @@ class DetialViewExample extends StatelessWidget {
                               width: 5,
                             ),
                             Text(
-                              "${recipeModel.rate}",
+                              "${widget.recipeModel.rate}",
                               style: Theme.of(context).textTheme.bodyText1,
                             ),
                           ],
@@ -131,7 +151,7 @@ class DetialViewExample extends StatelessWidget {
                                   itemBuilder:
                                       (BuildContext context, int index) {
                                     Ingredent ingredent =
-                                        recipeModel.ingredents[index];
+                                        widget.recipeModel.ingredents[index];
                                     return Row(
                                       children: [
                                         Text(
@@ -155,7 +175,8 @@ class DetialViewExample extends StatelessWidget {
                                   separatorBuilder:
                                       (BuildContext context, int index) =>
                                           SizedBox(height: 7),
-                                  itemCount: recipeModel.ingredents.length)),
+                                  itemCount:
+                                      widget.recipeModel.ingredents.length)),
                         )
                       ],
                     ),
@@ -186,11 +207,23 @@ class DetialViewExample extends StatelessWidget {
                     ),
                     TextButton(
                       onPressed: () async {
-                        await bookmarkManager.addToBookMarks(recipeModel);
+                        _isBookmarked
+                            ? await bookmarkManager
+                                .removeFromBookmarks(widget.recipeModel)
+                            : await bookmarkManager
+                                .addToBookMarks(widget.recipeModel);
+                        setState(() {
+                          _isBookmarked = !_isBookmarked;
+                        });
                       },
-                      child: const Padding(
+                      child: Padding(
                         padding: EdgeInsets.all(12.0),
-                        child: Icon(Icons.bookmark_border_outlined),
+                        child: Icon(
+                          _isBookmarked
+                              ? Icons.bookmark_added
+                              : Icons.bookmark_border_outlined,
+                          color: Colors.amber,
+                        ),
                       ),
                       style: TextButton.styleFrom(
                           backgroundColor:

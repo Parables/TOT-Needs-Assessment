@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:path/path.dart';
 import 'package:provider/provider.dart';
 import 'package:recipe_app/controller/bookmark_manager.dart';
 import 'package:recipe_app/model/recipe_model.dart';
@@ -21,7 +20,7 @@ class BookmarkView extends StatelessWidget {
               return FutureBuilder(
                   future: bookManager.getAllBookMarks(),
                   builder: (BuildContext context,
-                      AsyncSnapshot<List<RecipeModel>> snapshot) {
+                      AsyncSnapshot<List<RecipeModel>?> snapshot) {
                     if (snapshot.hasError) {
                       return Center(
                         child: Text("Failed to load recipes"),
@@ -29,7 +28,7 @@ class BookmarkView extends StatelessWidget {
                     } else if (snapshot.connectionState ==
                             ConnectionState.waiting &&
                         !snapshot.hasData) {
-                      return CircularProgressIndicator();
+                      return Center(child: CircularProgressIndicator());
                     } else if (snapshot.connectionState ==
                             ConnectionState.done &&
                         !snapshot.hasData) {

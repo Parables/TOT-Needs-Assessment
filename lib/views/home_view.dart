@@ -16,7 +16,6 @@ class _HomeViewState extends State<HomeView> {
   final PageController _pageController =
       PageController(viewportFraction: 0.9, initialPage: 0);
   final RecipeManager _recipeManager = RecipeManager();
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
